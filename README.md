@@ -12,5 +12,15 @@ A very simple CRUD API implementation in Golang
 
 #### Iteration 2
 
-1. List CRUD routes setup
-2. Ensure consistency between lists and tasks
+1. Error handling
+2. Error feedback
+3. Logging
+
+#### Iteration 3
+
+1. Authentication
+2. Authorization
+
+#### Iteration 4
+
+1. Enable HTTPS
