@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
@@ -18,7 +19,10 @@ func (h *Handlers) AddTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	insertResult, err := h.collection.InsertOne(context.TODO(), task)
+	dbCtx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+	defer cancel()
+
+	insertResult, err := h.collection.InsertOne(dbCtx, task)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error while inserting task in database: %v", err), http.StatusInternalServerError)
 

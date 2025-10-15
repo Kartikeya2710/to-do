@@ -11,20 +11,20 @@ import (
 )
 
 func (h *Handlers) GetAllTasks(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	dbCtx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 
-	cursor, err := h.collection.Find(ctx, bson.D{})
+	cursor, err := h.collection.Find(dbCtx, bson.D{})
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error fetching tasks from database: %v", err), http.StatusInternalServerError)
 
 		return
 	}
 
-	defer cursor.Close(ctx)
+	defer cursor.Close(dbCtx)
 
 	var results []Task
-	if err := cursor.All(ctx, &results); err != nil {
+	if err := cursor.All(dbCtx, &results); err != nil {
 		http.Error(w, fmt.Sprintf("Error fetching tasks from database: %v", err), http.StatusInternalServerError)
 
 		return

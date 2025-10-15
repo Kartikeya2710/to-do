@@ -19,12 +19,12 @@ func (h *Handlers) RemoveTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
-	defer cancel()
-
 	filter := bson.D{{Key: "_id", Value: id}}
 
-	if _, err := h.collection.DeleteOne(ctx, filter); err != nil {
+	dbCtx, cancel := context.WithTimeout(r.Context(), time.Second*5)
+	defer cancel()
+
+	if _, err := h.collection.DeleteOne(dbCtx, filter); err != nil {
 		http.Error(w, fmt.Sprintf("Error deleting task from database: %v", err), http.StatusInternalServerError)
 
 		return

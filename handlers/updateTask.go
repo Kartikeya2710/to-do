@@ -28,10 +28,10 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	dbCtx, cancel := context.WithTimeout(r.Context(), time.Second*5)
 	defer cancel()
 
-	if _, err := h.collection.UpdateByID(ctx, id, bson.D{{Key: "$set", Value: task}}); err != nil {
+	if _, err := h.collection.UpdateByID(dbCtx, id, bson.D{{Key: "$set", Value: task}}); err != nil {
 		http.Error(w, fmt.Sprintf("Error updating task in database: %v", err), http.StatusInternalServerError)
 
 		return
