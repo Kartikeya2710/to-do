@@ -15,7 +15,7 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	id, err := bson.ObjectIDFromHex(vars["id"])
 	if err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
-		h.logger.Fatal("Error deriving id from the request: %v\n", err)
+		h.logger.Fatalf("Error deriving id from the request: %v\n", err)
 
 		return
 	}
@@ -24,7 +24,7 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		http.Error(w, "Bad reqeust", http.StatusBadRequest)
-		h.logger.Fatal("Error deriving task from the request: %v\n", err)
+		h.logger.Fatalf("Error deriving task from the request: %v\n", err)
 
 		return
 	}
@@ -34,7 +34,7 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 
 	if _, err := h.collection.UpdateByID(dbCtx, id, bson.D{{Key: "$set", Value: task}}); err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		h.logger.Fatal("Error updating the document in the collection: %v\n", err)
+		h.logger.Fatalf("Error updating the document in the collection: %v\n", err)
 
 		return
 	}

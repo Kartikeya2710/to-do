@@ -14,7 +14,7 @@ func (h *Handlers) RemoveTask(w http.ResponseWriter, r *http.Request) {
 	id, err := bson.ObjectIDFromHex(vars["id"])
 	if err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
-		h.logger.Fatal("Error deriving id from the request: %v\n", err)
+		h.logger.Fatalf("Error deriving id from the request: %v\n", err)
 
 		return
 	}
@@ -26,7 +26,7 @@ func (h *Handlers) RemoveTask(w http.ResponseWriter, r *http.Request) {
 
 	if _, err := h.collection.DeleteOne(dbCtx, filter); err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
-		h.logger.Fatal("Error deleting document from the collection: %v\n", err)
+		h.logger.Fatalf("Error deleting document from the collection: %v\n", err)
 
 		return
 	}
