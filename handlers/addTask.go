@@ -14,7 +14,7 @@ func (h *Handlers) AddTask(w http.ResponseWriter, r *http.Request) {
 	var task Task
 
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Bad reqeust", http.StatusBadRequest)
 
 		return
 	}
@@ -24,13 +24,13 @@ func (h *Handlers) AddTask(w http.ResponseWriter, r *http.Request) {
 
 	insertResult, err := h.collection.InsertOne(dbCtx, task)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error while inserting task in database: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Internal server error"), http.StatusInternalServerError)
 
 		return
 	}
 
 	insertedId := insertResult.InsertedID.(bson.ObjectID)
 	if err := json.NewEncoder(w).Encode(insertedId); err != nil {
-		http.Error(w, fmt.Sprintf("Error writing insertion output: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Internal server error"), http.StatusInternalServerError)
 	}
 }

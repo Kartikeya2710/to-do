@@ -15,7 +15,7 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := bson.ObjectIDFromHex(vars["id"])
 	if err != nil {
-		http.Error(w, "Improper format of id specified", http.StatusBadRequest)
+		http.Error(w, "Bad request", http.StatusBadRequest)
 
 		return
 	}
@@ -23,7 +23,7 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	var task Task
 
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Bad reqeust", http.StatusBadRequest)
 
 		return
 	}

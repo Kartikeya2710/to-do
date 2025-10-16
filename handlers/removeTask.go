@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -14,7 +13,7 @@ func (h *Handlers) RemoveTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := bson.ObjectIDFromHex(vars["id"])
 	if err != nil {
-		http.Error(w, "Improper format of id specified", http.StatusBadRequest)
+		http.Error(w, "Bad request", http.StatusBadRequest)
 
 		return
 	}
@@ -25,7 +24,7 @@ func (h *Handlers) RemoveTask(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	if _, err := h.collection.DeleteOne(dbCtx, filter); err != nil {
-		http.Error(w, fmt.Sprintf("Error deleting task from database: %v", err), http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 
 		return
 	}

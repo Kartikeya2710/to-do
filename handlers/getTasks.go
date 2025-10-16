@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -16,7 +15,7 @@ func (h *Handlers) GetAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	cursor, err := h.collection.Find(dbCtx, bson.D{})
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching tasks from database: %v", err), http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 
 		return
 	}
@@ -25,7 +24,7 @@ func (h *Handlers) GetAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	var results []Task
 	if err := cursor.All(dbCtx, &results); err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching tasks from database: %v", err), http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 
 		return
 
@@ -34,7 +33,7 @@ func (h *Handlers) GetAllTasks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	if err := json.NewEncoder(w).Encode(results); err != nil {
-		http.Error(w, "Error writing response", http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 
 		return
 	}
