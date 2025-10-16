@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -15,6 +14,7 @@ func (h *Handlers) AddTask(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		http.Error(w, "Bad reqeust", http.StatusBadRequest)
+		h.logger.Fatalf("Error decoding task from request body: %v\n", err)
 
 		return
 	}
@@ -24,13 +24,17 @@ func (h *Handlers) AddTask(w http.ResponseWriter, r *http.Request) {
 
 	insertResult, err := h.collection.InsertOne(dbCtx, task)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Internal server error"), http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		h.logger.Fatalf("Error inserting document into collection: %v\n", err)
 
 		return
 	}
 
 	insertedId := insertResult.InsertedID.(bson.ObjectID)
 	if err := json.NewEncoder(w).Encode(insertedId); err != nil {
-		http.Error(w, fmt.Sprintf("Internal server error"), http.StatusInternalServerError)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		h.logger.Fatalf("Error sending inserted document id in response: %v\n", err)
+
+		return
 	}
 }

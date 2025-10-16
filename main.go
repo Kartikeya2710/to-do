@@ -13,31 +13,32 @@ import (
 )
 
 func main() {
+	logger := log.New(os.Stdout, "HTTP: ", log.LstdFlags)
 	if err := godotenv.Load("./database.env"); err != nil {
-		log.Fatalf("Error loading database.env file")
+		logger.Fatalf("Error loading database.env file")
 	}
 
 	dbName, ok := os.LookupEnv("DB_NAME")
 	if !ok {
-		log.Fatal("DB_NAME environment variable is not defined")
+		logger.Fatal("DB_NAME environment variable is not defined")
 	}
 
 	collectionName, ok := os.LookupEnv("COLLECTION_NAME")
 	if !ok {
-		log.Fatal("COLLECTION_NAME environment variable is not defined")
+		logger.Fatal("COLLECTION_NAME environment variable is not defined")
 	}
 
 	client, err := db.NewDBClient()
 	if err != nil {
-		log.Fatal("Error creating MongoDB client")
+		logger.Fatal("Error creating MongoDB client")
 	}
 
 	collection, err := db.GetMongoDBCollection(client, dbName, collectionName)
 	if err != nil {
-		log.Fatal("Error fetching MongoDB Collection")
+		logger.Fatal("Error fetching MongoDB Collection")
 	}
 
-	handlers := handlers.NewHandlers(collection)
+	handlers := handlers.NewHandlers(collection, logger)
 	router := mux.NewRouter()
 
 	router.HandleFunc("/tasks", handlers.GetAllTasks).Methods(http.MethodGet)
