@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/Kartikeya2710/to-do/db"
 	"github.com/Kartikeya2710/to-do/handlers"
@@ -28,12 +30,16 @@ func main() {
 		logger.Fatal("COLLECTION_NAME environment variable is not defined")
 	}
 
-	client, err := db.NewDBClient()
+	database, err := db.NewDBClient(logger)
 	if err != nil {
-		logger.Fatal("Error creating MongoDB client")
+		logger.Fatalf("Failed to initialize DB client: %v", err)
 	}
+	defer database.Close(context.Background())
 
-	collection, err := db.GetMongoDBCollection(client, dbName, collectionName)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	collection, err := database.GetMongoDBCollection(ctx, dbName, collectionName)
 	if err != nil {
 		logger.Fatal("Error fetching MongoDB Collection")
 	}
