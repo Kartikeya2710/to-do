@@ -16,8 +16,8 @@ import (
 
 func main() {
 	logger := log.New(os.Stdout, "HTTP: ", log.LstdFlags)
-	if err := godotenv.Load("./database.env"); err != nil {
-		logger.Fatalf("Error loading database.env file")
+	if err := godotenv.Load("./.env"); err != nil {
+		logger.Fatalf("Error loading .env file")
 	}
 
 	dbName, ok := os.LookupEnv("DB_NAME")

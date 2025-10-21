@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Kartikeya2710/to-do/models"
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
@@ -20,7 +21,7 @@ func (h *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var task Task
+	var task models.Task
 
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		http.Error(w, "Bad reqeust", http.StatusBadRequest)

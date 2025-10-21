@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Kartikeya2710/to-do/models"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
@@ -23,7 +24,7 @@ func (h *Handlers) GetAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	defer cursor.Close(dbCtx)
 
-	var results []Task
+	var results []models.Task
 	if err := cursor.All(dbCtx, &results); err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		h.logger.Fatalf("Error fetching documents from the cursor: %v\n", err)
