@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-func (h *Handlers) RemoveTask(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandlers) RemoveTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := bson.ObjectIDFromHex(vars["id"])
 	if err != nil {

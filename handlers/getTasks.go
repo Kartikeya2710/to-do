@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-func (h *Handlers) GetAllTasks(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandlers) GetAllTasks(w http.ResponseWriter, r *http.Request) {
 	dbCtx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 

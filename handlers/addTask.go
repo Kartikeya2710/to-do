@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-func (h *Handlers) AddTask(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandlers) AddTask(w http.ResponseWriter, r *http.Request) {
 	var task models.Task
 
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
