@@ -18,8 +18,8 @@ A very simple CRUD API implementation in Golang
 
 #### Iteration 3
 
-1. Authentication
-2. Authorization
+1. ~~Basic JWT Authentication~~
+2. ~~Middleware~~
 
 #### Iteration 4
 
