@@ -88,6 +88,9 @@ func main() {
 	taskHandlers := handlers.NewTaskHandlers(tasksCollection, logger)
 	router := mux.NewRouter()
 
+	router.HandleFunc("/register", authHandlers.Register).Methods(http.MethodPost)
+	router.HandleFunc("/login", authHandlers.Login).Methods(http.MethodPost)
+
 	router.HandleFunc("/tasks", taskHandlers.GetAllTasks).Methods(http.MethodGet)
 	router.HandleFunc("/tasks", taskHandlers.AddTask).Methods(http.MethodPost)
 	router.HandleFunc("/tasks/{id}", taskHandlers.RemoveTask).Methods(http.MethodDelete)
