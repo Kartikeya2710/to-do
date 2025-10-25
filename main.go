@@ -10,6 +10,7 @@ import (
 
 	"github.com/Kartikeya2710/to-do/db"
 	"github.com/Kartikeya2710/to-do/handlers"
+	"github.com/Kartikeya2710/to-do/middleware"
 	"github.com/Kartikeya2710/to-do/utils"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -81,6 +82,7 @@ func main() {
 	}
 
 	jwtManager := utils.NewJWTManager(jwtSecretKey)
+	authMiddleware := middleware.AuthMiddleware(jwtManager, logger)
 
 	// Handlers
 
@@ -91,10 +93,10 @@ func main() {
 	router.HandleFunc("/register", authHandlers.Register).Methods(http.MethodPost)
 	router.HandleFunc("/login", authHandlers.Login).Methods(http.MethodPost)
 
-	router.HandleFunc("/tasks", taskHandlers.GetAllTasks).Methods(http.MethodGet)
-	router.HandleFunc("/tasks", taskHandlers.AddTask).Methods(http.MethodPost)
-	router.HandleFunc("/tasks/{id}", taskHandlers.RemoveTask).Methods(http.MethodDelete)
-	router.HandleFunc("/tasks/{id}", taskHandlers.UpdateTask).Methods(http.MethodPut)
+	router.Handle("/tasks", authMiddleware(http.HandlerFunc(taskHandlers.GetAllTasks))).Methods(http.MethodGet)
+	router.Handle("/tasks", authMiddleware(http.HandlerFunc(taskHandlers.AddTask))).Methods(http.MethodPost)
+	router.Handle("/tasks/{id}", authMiddleware(http.HandlerFunc(taskHandlers.RemoveTask))).Methods(http.MethodDelete)
+	router.Handle("/tasks/{id}", authMiddleware(http.HandlerFunc(taskHandlers.UpdateTask))).Methods(http.MethodPut)
 
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		fmt.Printf("Error starting the server: %v", err)
