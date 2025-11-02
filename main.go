@@ -22,6 +22,12 @@ func main() {
 		logger.Fatalf("Error loading .env file")
 	}
 
+	// Application
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		logger.Fatal("PORT environment variable is not defined")
+	}
+
 	// DB stuff
 	uri, ok := os.LookupEnv("CLUSTER_URI")
 	if !ok {
@@ -98,7 +104,7 @@ func main() {
 	router.Handle("/tasks/{id}", authMiddleware(http.HandlerFunc(taskHandlers.RemoveTask))).Methods(http.MethodDelete)
 	router.Handle("/tasks/{id}", authMiddleware(http.HandlerFunc(taskHandlers.UpdateTask))).Methods(http.MethodPut)
 
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), router); err != nil {
 		fmt.Printf("Error starting the server: %v", err)
 	}
 }
