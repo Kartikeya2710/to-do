@@ -23,7 +23,17 @@ A very simple CRUD API implementation in Golang
 
 #### Iteration 4
 
-1. Enable HTTPS
+1. Add reminder for tasks
+
+#### Iteration 5
+
+1. Generate docs for routes
+2. Rate limiting routes
+
+#### Iteration 6
+
+1. Enabling HTTPS
+2. Deployment
 
 ### Learnings
 
